@@ -85,7 +85,8 @@ def run_model(prompt, num, length, model_name):
     try:
       sentence = prompt.strip()
       model = models[model_name]
-      tokenizer = tokenizers[model_name]
+      model = AutoModelForMaskedLM.from_pretrained("BigSalmon/Flowberta")
+      tokenizer = AutoTokenizer.from_pretrained("roberta-base")
       token_ids = tokenizer.encode(sentence, return_tensors='pt')
       token_ids_tk = tokenizer.tokenize(sentence, return_tensors='pt')
       masked_position = (token_ids.squeeze() == tokenizer.mask_token_id).nonzero()
@@ -96,7 +97,7 @@ def run_model(prompt, num, length, model_name):
         list_of_list =[]
       for mask_index in masked_pos:
         mask_hidden_state = last_hidden_state[mask_index]
-        idx = torch.topk(mask_hidden_state, k=30, dim=0)[1]
+        idx = torch.topk(mask_hidden_state, k=100, dim=0)[1]
         words = [tokenizer.decode(i.item()).strip() for i in idx]
         list_of_list.append(words)
       return list_of_list
