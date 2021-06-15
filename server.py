@@ -29,7 +29,7 @@ device = torch.device('cpu')
 # model loading
 for model_name in model_names:
     tokenizers[model_name] = AutoTokenizer.from_pretrained(
-        model_name)
+        "roberta-base")
     models[model_name] = AutoModelForMaskedLM.from_pretrained(
         model_name, return_dict=True)
     models[model_name].to(device)
